@@ -3,51 +3,17 @@ import go from "highlight.js/lib/languages/go";
 
 hljs.registerLanguage("go", go);
 
-// ============================================================
-// Settings storage helper (Chrome extension storage)
-// ============================================================
+import { DEFAULT_THEME, THEME_CDN_BASE, THEME_STYLE_ID } from "../common/constants";
+import { Settings } from "../common/settings";
 
-const THEME_STYLE_ID = "hljs-theme-style";
-const THEME_CDN_BASE = "https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/styles";
-const DEFAULT_THEME = "panda-syntax-dark.min.css";
-
-class Settings {
-  static THEME_KEY = "theme";
-  static IS_EXTENSION_ENABLED_KEY = "isExtensionEnabled";
-
-  static async getTheme(): Promise<string> {
-    const result = await chrome.storage.local.get(this.THEME_KEY);
-    if (result.theme) return result.theme as string;
-    await this.setTheme(DEFAULT_THEME);
-    return DEFAULT_THEME;
-  }
-
-  static async setTheme(theme: string) {
-    await chrome.storage.local.set({ [this.THEME_KEY]: theme });
-  }
-
-  static async isExtensionEnabled(): Promise<boolean> {
-    const result = await chrome.storage.local.get(this.IS_EXTENSION_ENABLED_KEY);
-    if (typeof result.isExtensionEnabled !== "boolean") {
-      await this.setExtensionEnabled(true);
-      return true;
-    }
-    return result.isExtensionEnabled as boolean;
-  }
-
-  static async setExtensionEnabled(enabled: boolean) {
-    await chrome.storage.local.set({
-      [this.IS_EXTENSION_ENABLED_KEY]: enabled,
-    });
-  }
-}
+hljs.registerLanguage("go", go);
 
 // ============================================================
 // Theme management
 // ============================================================
 
 async function loadTheme() {
-  const theme = await Settings.getTheme();
+  const theme = await Settings.getTheme(DEFAULT_THEME);
   applyTheme(theme);
 }
 

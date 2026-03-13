@@ -305,14 +305,25 @@ class Settings {
 // ============================================================
 
 /**
- * Populate the theme <select> element with all available themes.
+ * Populate the theme <select> element with all available themes,
+ * optionally filtered by a search query.
  * Each option label is a human-readable version of the filename,
  * e.g. "panda-syntax-dark.min.css" → "panda syntax dark (dark)".
  */
-function populateThemeSelector(themes: Theme[]) {
+function populateThemeSelector(themes: Theme[], searchQuery: string = "") {
   const selector = document.getElementById("themeSelector") as HTMLSelectElement;
+  const currentSelection = selector.value;
+  selector.innerHTML = ""; // Clear existing options
 
-  themes.forEach((theme) => {
+  const filteredThemes = themes.filter((theme) => {
+    if (!searchQuery) return true;
+    const searchLower = searchQuery.toLowerCase();
+    const nameLower = theme.name.toLowerCase();
+    const typeLower = theme.type.toLowerCase();
+    return nameLower.includes(searchLower) || typeLower.includes(searchLower);
+  });
+
+  filteredThemes.forEach((theme) => {
     const option = document.createElement("option");
     option.value = theme.name;
 
@@ -323,6 +334,11 @@ function populateThemeSelector(themes: Theme[]) {
     option.textContent = `${label} (${theme.type})`;
     selector.appendChild(option);
   });
+
+  // Re-select the previous theme if it's still in the list
+  if (currentSelection) {
+    selector.value = currentSelection;
+  }
 }
 
 /**
@@ -347,7 +363,7 @@ async function reloadGoDevTabs() {
 /**
  * Set up the enable/disable toggle slider.
  * - Reads the current enabled state and reflects it in the checkbox.
- * - Disables the theme selector when the extension is turned off.
+ * - Disables the theme selector and search input when the extension is turned off.
  * - Reloads go.dev tabs whenever the toggle changes.
  *
  * Note: the CSS transition on the slider is temporarily set to 0s
@@ -356,6 +372,7 @@ async function reloadGoDevTabs() {
 async function initToggle() {
   const slider = document.getElementById("toggle-extension-slider") as HTMLInputElement;
   const themeSelector = document.getElementById("themeSelector") as HTMLSelectElement;
+  const themeSearch = document.getElementById("themeSearch") as HTMLInputElement;
 
   // Disable the slide animation while we set the initial state
   document.documentElement.style.setProperty("--slider-transition", "0.0s");
@@ -363,11 +380,13 @@ async function initToggle() {
   const isEnabled = await Settings.isExtensionEnabled();
   slider.checked = isEnabled;
   themeSelector.disabled = !isEnabled;
+  themeSearch.disabled = !isEnabled;
 
   slider.addEventListener("change", async (event) => {
     const enabled = (event.target as HTMLInputElement).checked;
     await Settings.setExtensionEnabled(enabled);
     themeSelector.disabled = !enabled;
+    themeSearch.disabled = !enabled;
     await reloadGoDevTabs();
   });
 
@@ -382,13 +401,21 @@ async function initToggle() {
 // ============================================================
 
 (async () => {
-  // Populate the dropdown with a shallow copy of the themes array
-  populateThemeSelector(AVAILABLE_THEMES.map((theme) => ({ ...theme })));
+  // Populate the dropdown with all available themes
+  populateThemeSelector(AVAILABLE_THEMES);
 
   // Set the dropdown to the currently saved theme
   const themeSelector = document.getElementById("themeSelector") as HTMLSelectElement;
+  const themeSearch = document.getElementById("themeSearch") as HTMLInputElement;
+
   const savedTheme = await Settings.getTheme();
   themeSelector.value = savedTheme;
+
+  // Search input listener
+  themeSearch.addEventListener("input", (e) => {
+    const query = (e.target as HTMLInputElement).value;
+    populateThemeSelector(AVAILABLE_THEMES, query);
+  });
 
   // Save the new theme whenever the user changes the dropdown
   themeSelector.addEventListener("change", () => {

@@ -281,7 +281,7 @@ class Settings {
     return DEFAULT_THEME;
   }
 
-  static async setTheme(theme: string): Promise<void> {
+  static async setTheme(theme: string) {
     await chrome.storage.local.set({ [this.THEME_KEY]: theme });
   }
 
@@ -295,7 +295,7 @@ class Settings {
     return result.isExtensionEnabled as boolean;
   }
 
-  static async setExtensionEnabled(enabled: boolean): Promise<void> {
+  static async setExtensionEnabled(enabled: boolean) {
     await chrome.storage.local.set({ [this.IS_EXTENSION_ENABLED_KEY]: enabled });
   }
 }
@@ -309,7 +309,7 @@ class Settings {
  * Each option label is a human-readable version of the filename,
  * e.g. "panda-syntax-dark.min.css" → "panda syntax dark (dark)".
  */
-function populateThemeSelector(themes: Theme[]): void {
+function populateThemeSelector(themes: Theme[]) {
   const selector = document.getElementById("themeSelector") as HTMLSelectElement;
 
   themes.forEach((theme) => {
@@ -335,7 +335,7 @@ function isGoDev(url: string): boolean {
 /**
  * Reload all open go.dev tabs so they pick up the new settings.
  */
-async function reloadGoDevTabs(): Promise<void> {
+async function reloadGoDevTabs() {
   const tabs = await chrome.tabs.query({});
   tabs.forEach((tab) => {
     if (tab.id && tab.url && isGoDev(tab.url)) {
@@ -353,7 +353,7 @@ async function reloadGoDevTabs(): Promise<void> {
  * Note: the CSS transition on the slider is temporarily set to 0s
  * during initialisation so it doesn't animate into its starting state.
  */
-async function initToggle(): Promise<void> {
+async function initToggle() {
   const slider = document.getElementById("toggle-extension-slider") as HTMLInputElement;
   const themeSelector = document.getElementById("themeSelector") as HTMLSelectElement;
 

@@ -23,7 +23,7 @@ class Settings {
     return DEFAULT_THEME;
   }
 
-  static async setTheme(theme: string): Promise<void> {
+  static async setTheme(theme: string) {
     await chrome.storage.local.set({ [this.THEME_KEY]: theme });
   }
 
@@ -38,7 +38,7 @@ class Settings {
     return result.isExtensionEnabled as boolean;
   }
 
-  static async setExtensionEnabled(enabled: boolean): Promise<void> {
+  static async setExtensionEnabled(enabled: boolean) {
     await chrome.storage.local.set({ [this.IS_EXTENSION_ENABLED_KEY]: enabled });
   }
 }
@@ -47,12 +47,12 @@ class Settings {
 // Theme management
 // ============================================================
 
-async function loadTheme(): Promise<void> {
+async function loadTheme() {
   const theme = await Settings.getTheme();
   applyTheme(theme);
 }
 
-function applyTheme(theme: string): void {
+function applyTheme(theme: string) {
   let link = document.getElementById(THEME_STYLE_ID) as HTMLLinkElement | null;
   if (!link) {
     link = document.createElement("link");
@@ -78,7 +78,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
 /**
  * Highlight a single <pre> element with Go syntax highlighting.
  */
-function highlightPreElement(pre: HTMLPreElement): void {
+function highlightPreElement(pre: HTMLPreElement) {
   if (!shouldHighlight(pre)) return;
 
   // Remove default padding so highlight.js styling takes over
@@ -131,16 +131,9 @@ function shouldHighlight(pre: HTMLPreElement | null): boolean {
 }
 
 /**
- * Returns true if the current page is on go.dev
- */
-function isGoDev(url: string): boolean {
-  return url.includes("go.dev");
-}
-
-/**
  * Highlight all <pre> blocks on the page.
  */
-function highlightAll(): void {
+function highlightAll() {
   document.querySelectorAll("pre").forEach((pre) => highlightPreElement(pre as HTMLPreElement));
 }
 
@@ -149,8 +142,6 @@ function highlightAll(): void {
 // ============================================================
 
 (async () => {
-  // Only run on go.dev pages when the extension is enabled
-  if (!isGoDev(window.location.href)) return;
   if (!(await Settings.isExtensionEnabled())) return;
 
   // Load the syntax highlighting theme

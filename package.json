@@ -1,7 +1,7 @@
 {
   "name": "godoc-highlighter",
   "version": "1.0.0",
-  "description": "",
+  "description": "Add syntax highlighting to Godoc",
   "license": "ISC",
   "author": "",
   "type": "module",

@@ -52,4 +52,3 @@ If you want to contribute or build the extension from source:
 - **CRXJS**: Vite plugin for building Chrome extensions.
 - **TypeScript**: Typed JavaScript for better development experience.
 - **HighlightJS**: Powerful syntax highlighting library.
-

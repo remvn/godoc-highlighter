@@ -8,8 +8,7 @@ hljs.registerLanguage("go", go);
 // ============================================================
 
 const THEME_STYLE_ID = "hljs-theme-style";
-const THEME_CDN_BASE =
-  "https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/styles";
+const THEME_CDN_BASE = "https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/styles";
 const DEFAULT_THEME = "panda-syntax-dark.min.css";
 
 class Settings {
@@ -28,9 +27,7 @@ class Settings {
   }
 
   static async isExtensionEnabled(): Promise<boolean> {
-    const result = await chrome.storage.local.get(
-      this.IS_EXTENSION_ENABLED_KEY,
-    );
+    const result = await chrome.storage.local.get(this.IS_EXTENSION_ENABLED_KEY);
     if (typeof result.isExtensionEnabled !== "boolean") {
       await this.setExtensionEnabled(true);
       return true;
@@ -39,7 +36,9 @@ class Settings {
   }
 
   static async setExtensionEnabled(enabled: boolean) {
-    await chrome.storage.local.set({ [this.IS_EXTENSION_ENABLED_KEY]: enabled });
+    await chrome.storage.local.set({
+      [this.IS_EXTENSION_ENABLED_KEY]: enabled,
+    });
   }
 }
 

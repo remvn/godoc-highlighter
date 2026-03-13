@@ -79,6 +79,9 @@ function highlightPreElement(pre: HTMLPreElement) {
  */
 function shouldHighlight(pre: HTMLPreElement | null): boolean {
   if (!pre || !pre.textContent || pre.classList.contains("hljs")) return false;
+  // ignore Go playground output
+  const outputSpan = pre.querySelector("span.Documentation-exampleOutputLabel");
+  if (outputSpan) return false;
 
   const codeEl = pre.querySelector("code");
 

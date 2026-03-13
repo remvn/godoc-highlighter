@@ -21,5 +21,5 @@ export default defineManifest({
     name: 'Go Docs Syntax Highlighter',
     permissions: ['storage', 'tabs'],
     update_url: 'https://clients2.google.com/service/update2/crx',
-    version: '1.0.2',
+    version: '1.0.0',
 })

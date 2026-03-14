@@ -4,9 +4,11 @@ A Chrome extension that adds syntax highlighting to Go documentation code blocks
 
 ## Features
 
-- **Syntax Highlighting**: Automatically detects and highlights Go code blocks.
-- **200+ Themes**: Choose from a vast collection of themes to customize your experience.
-- **Easy to Use**: Simple popup interface for theme selection.
+- **Syntax Highlighting**: Automatically detects and highlights Go code blocks using Highlight.js.
+- **Interactive Code Editors**: Injects Monaco Editor into code textareas for a premium viewing and editing experience.
+- **200+ Themes**: Choose from a vast collection of themes to customize your reading experience.
+- **Searchable Popup**: Quickly find your favorite theme with the built-in search bar.
+- **Easy to Use**: Simple popup interface for quick theme switching and settings.
 
 ## Installation
 
@@ -51,4 +53,5 @@ If you want to contribute or build the extension from source:
 - **Vite**: Next-generation frontend tooling.
 - **CRXJS**: Vite plugin for building Chrome extensions.
 - **TypeScript**: Typed JavaScript for better development experience.
-- **HighlightJS**: Powerful syntax highlighting library.
+- **Highlight.js**: Powerful syntax highlighting library.
+- **Monaco Editor**: High-quality interactive code editing and viewing.

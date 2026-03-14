@@ -36,23 +36,23 @@ async function populateThemeSelector(themes: Theme[], searchQuery: string = "") 
 }
 
 
-/**
- * Returns true if the given URL is on go.dev.
- */
-function isGoDev(url: string): boolean {
-  return url.includes("go.dev");
-}
 
 /**
  * Reload all open go.dev tabs so they pick up the new settings.
+ * It dynamically retrieves URLs from the manifest content_scripts matches.
  */
 async function reloadGoDevTabs() {
-  const tabs = await chrome.tabs.query({});
-  tabs.forEach((tab) => {
-    if (tab.id && tab.url && isGoDev(tab.url)) {
-      chrome.tabs.reload(tab.id);
-    }
-  });
+  const manifest = chrome.runtime.getManifest();
+  const matches = manifest.content_scripts?.[0]?.matches || [];
+
+  if (matches.length > 0) {
+    const tabs = await chrome.tabs.query({ url: matches });
+    tabs.forEach((tab) => {
+      if (tab.id) {
+        chrome.tabs.reload(tab.id);
+      }
+    });
+  }
 }
 
 /**

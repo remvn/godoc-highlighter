@@ -2,6 +2,17 @@
 
 A Chrome extension that adds syntax highlighting to Go documentation code blocks on `pkg.go.dev`.
 
+<div style="display:flex; gap:20px; align-items: center;">
+    <figure align="center">
+        <img src="images/syntax-highlight.png" width="600">
+        <figcaption>Syntax highlighting.</figcaption>
+    </figure>
+    <figure align="center">
+        <img src="images/playground.png" width="600">
+        <figcaption>Better code playground.</figcaption>
+    </figure>
+</div>
+
 ## Features
 
 - **Syntax Highlighting**: Automatically detects and highlights Go code blocks using Highlight.js.

@@ -14,11 +14,12 @@
     "allowImportingTsExtensions": true,
     "strict": true,
     "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "noEmit": true,
     "isolatedModules": true,
     "skipLibCheck": true,
+    "allowJs": true,
     "noUncheckedSideEffectImports": true
   },
   "include": ["src/**/*"],

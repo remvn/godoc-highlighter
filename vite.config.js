@@ -6,6 +6,7 @@ import manifest from "./manifest.config.js";
 import { name, version } from "./package.json";
 
 export default defineConfig({
+  base: "",
   resolve: {
     alias: {
       "@": `${path.resolve(__dirname, "src")}`,
@@ -15,6 +16,15 @@ export default defineConfig({
     crx({ manifest }),
     zip({ outDir: "release", outFileName: `crx-${name}-${version}.zip` }),
   ],
+  experimental: {
+    // fix for font-face src:
+    // https://github.com/crxjs/chrome-extension-tools/issues/842#issuecomment-1849035997
+    renderBuiltUrl(filename, { hostType }) {
+      if (hostType === "css") {
+        return `chrome-extension://__MSG_@@extension_id__/${filename}`;
+      }
+    },
+  },
   server: {
     cors: {
       origin: [/chrome-extension:\/\//],

@@ -1,11 +1,13 @@
+import { randomString } from "@/common/utils";
 import hljs from "highlight.js/lib/core";
 import go from "highlight.js/lib/languages/go";
-
-hljs.registerLanguage("go", go);
-
+import "monaco-editor/esm/vs/basic-languages/go/go.contribution.js";
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api.js";
 import { DEFAULT_THEME, THEME_CDN_BASE, THEME_STYLE_ID } from "../common/constants";
 import { Settings } from "../common/settings";
+// import "./monaco-worker";
 
+monaco.languages.register({ id: "go" });
 hljs.registerLanguage("go", go);
 
 // ============================================================
@@ -102,7 +104,42 @@ function shouldHighlight(pre: HTMLPreElement | null): boolean {
  * Highlight all <pre> blocks on the page.
  */
 function highlightAll() {
-  document.querySelectorAll("pre").forEach((pre) => highlightPreElement(pre as HTMLPreElement));
+  const elements = document.querySelectorAll<HTMLPreElement>("pre");
+  for (const pre of elements) {
+    highlightPreElement(pre);
+  }
+}
+
+function injectTextareaEditors() {
+  const elements = document.querySelectorAll<HTMLTextAreaElement>("textarea.code");
+  for (const textArea of elements) {
+    if (textArea.id) return;
+    const id = randomString(20);
+    textArea.id = `${id}-textarea`;
+
+    const container = document.createElement("div");
+    container.id = `${id}-container`;
+    container.style.height = `${textArea.offsetHeight}px`;
+    container.style.border = "var(--border)";
+    container.style.borderRadius = "var(--border-radius)";
+    // disable jump menu inside editor
+    container.addEventListener("keydown", (event) => {
+      if (event.key === "f") {
+        event.stopPropagation();
+      }
+    });
+    textArea.parentElement?.prepend(container);
+    textArea.style.display = "none";
+
+    const editor = monaco.editor.create(container, {
+      value: textArea.value,
+      language: "go",
+      theme: "vs-dark",
+    });
+    editor.onDidChangeModelContent((_) => {
+      textArea.value = editor.getValue();
+    });
+  }
 }
 
 // ============================================================
@@ -120,4 +157,5 @@ function highlightAll() {
 
   // Highlight again after a short delay (for dynamically loaded content)
   setTimeout(highlightAll, 2000);
+  setTimeout(injectTextareaEditors, 3000);
 })();

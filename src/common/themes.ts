@@ -259,3 +259,18 @@ export const AVAILABLE_THEMES: Theme[] = [
   { name: "base16/xcode-dusk.min.css", type: "dark" },
   { name: "base16/zenburn.min.css", type: "dark" },
 ];
+
+/**
+ * Formats a theme file name into a human-readable display name.
+ * Removes the '.css' extension, replaces hyphens with spaces, 
+ * and strips the '.min' suffix if present.
+ * 
+ * @param fileName - The raw theme file name or path (e.g., 'atom-one-dark.min.css').
+ * @returns A formatted, user-friendly theme name (e.g., 'atom one dark').
+ */
+export function formatThemeName(fileName: string): string {
+  let name = fileName.replace(".css", "").replaceAll("-", " ");
+  if (name.endsWith(".min")) name = name.slice(0, name.length - 4);
+  return name;
+}
+

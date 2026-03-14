@@ -1,6 +1,5 @@
-import { DEFAULT_THEME } from "../common/constants";
-import { Settings } from "../common/settings";
-import { AVAILABLE_THEMES, type Theme } from "../common/themes";
+import { Settings } from "@/common/settings";
+import { AVAILABLE_THEMES, formatThemeName, type Theme } from "../common/themes";
 
 // ============================================================
 // UI helpers
@@ -28,17 +27,14 @@ async function populateThemeSelector(themes: Theme[], searchQuery: string = "") 
     const option = document.createElement("option");
     option.value = theme.name;
 
-    // Strip ".css" suffix, replace hyphens with spaces, then strip ".min"
-    let label = theme.name.replace(".css", "").replaceAll("-", " ");
-    if (label.endsWith(".min")) label = label.slice(0, label.length - 4);
-
+    const label = formatThemeName(theme.name);
     option.textContent = `${label} (${theme.type})`;
     selector.appendChild(option);
   });
 
-  const currentTheme = await Settings.getTheme(DEFAULT_THEME);
-  selector.value = currentTheme;
+  selector.value = await Settings.getTheme();
 }
+
 
 /**
  * Returns true if the given URL is on go.dev.
@@ -115,7 +111,7 @@ function setVersion() {
   const themeSelector = document.getElementById("themeSelector") as HTMLSelectElement;
   const themeSearch = document.getElementById("themeSearch") as HTMLInputElement;
 
-  const savedTheme = await Settings.getTheme(DEFAULT_THEME);
+  const savedTheme = await Settings.getTheme();
   themeSelector.value = savedTheme;
 
   // Search input listener

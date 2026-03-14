@@ -1,30 +1,35 @@
-export class Settings {
-  static THEME_KEY = "theme";
-  static IS_EXTENSION_ENABLED_KEY = "isExtensionEnabled";
+import { DEFAULT_THEME, IS_EXTENSION_ENABLED_KEY, THEME_KEY } from "./constants";
+import { Store } from "./store";
 
-  static async getTheme(defaultTheme: string): Promise<string> {
-    const result = await chrome.storage.local.get(this.THEME_KEY);
-    if (result.theme) return result.theme as string;
-    await this.setTheme(defaultTheme);
-    return defaultTheme;
+async function getTheme(): Promise<string> {
+  let theme = await Store.get(THEME_KEY);
+  if (theme == null) {
+    theme = DEFAULT_THEME;
+    await Store.set(THEME_KEY, theme);
   }
-
-  static async setTheme(theme: string) {
-    await chrome.storage.local.set({ [this.THEME_KEY]: theme });
-  }
-
-  static async isExtensionEnabled(): Promise<boolean> {
-    const result = await chrome.storage.local.get(this.IS_EXTENSION_ENABLED_KEY);
-    if (typeof result.isExtensionEnabled !== "boolean") {
-      await this.setExtensionEnabled(true);
-      return true;
-    }
-    return result.isExtensionEnabled as boolean;
-  }
-
-  static async setExtensionEnabled(enabled: boolean) {
-    await chrome.storage.local.set({
-      [this.IS_EXTENSION_ENABLED_KEY]: enabled,
-    });
-  }
+  return theme as string;
 }
+
+async function setTheme(theme: string) {
+  await Store.set(THEME_KEY, theme);
+}
+
+async function isExtensionEnabled(): Promise<boolean> {
+  let value = await Store.get(IS_EXTENSION_ENABLED_KEY);
+  if (value == null) {
+    value = true;
+    await Store.set(IS_EXTENSION_ENABLED_KEY, value);
+  }
+  return value as boolean;
+}
+
+async function setExtensionEnabled(isEnabled: boolean) {
+  await Store.set(IS_EXTENSION_ENABLED_KEY, isEnabled);
+}
+
+export const Settings = {
+  getTheme,
+  setTheme,
+  isExtensionEnabled,
+  setExtensionEnabled,
+};

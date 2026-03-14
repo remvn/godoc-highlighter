@@ -2,6 +2,10 @@
 
 import "monaco-editor/esm/vs/editor/editor.api.js";
 import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+import EditorWorkerURL from "monaco-editor/esm/vs/editor/editor.worker?worker&url";
+
+console.log(EditorWorker);
+console.log(EditorWorkerURL);
 
 // @ts-ignore
 self.MonacoEnvironment = {

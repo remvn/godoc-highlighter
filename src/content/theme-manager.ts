@@ -1,5 +1,6 @@
 import { Settings } from "@/common/settings";
-import { THEME_CDN_BASE, THEME_KEY, THEME_STYLE_ID } from "../common/constants";
+import { THEME_KEY, THEME_STYLE_ID } from "../common/constants";
+import { AVAILABLE_THEMES } from "@/common/themes";
 
 export async function initThemeManager() {
   await loadTheme();
@@ -18,13 +19,16 @@ async function loadTheme() {
 }
 
 function applyTheme(theme: string) {
-  let link = document.getElementById(THEME_STYLE_ID) as HTMLLinkElement | null;
-  if (!link) {
-    link = document.createElement("link");
-    link.id = THEME_STYLE_ID;
-    link.rel = "stylesheet";
-    link.type = "text/css";
-    document.head.appendChild(link);
+  let element = document.getElementById(THEME_STYLE_ID) as HTMLStyleElement | null;
+  if (!element) {
+    element = document.createElement("style");
+    element.id = THEME_STYLE_ID;
+    document.head.appendChild(element);
   }
-  link.href = `${THEME_CDN_BASE}/${theme}`;
+
+  let content = "";
+  for (const item of AVAILABLE_THEMES) {
+    if (item.name === theme) content = item.content;
+  }
+  element.textContent = content;
 }

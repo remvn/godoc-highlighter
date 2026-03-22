@@ -1,7 +1,7 @@
 import { Settings } from "@/common/settings";
+import { injectTextareaEditors } from "./editor";
 import { highlightAll } from "./highlighter";
 import { initThemeManager } from "./theme-manager";
-import { injectTextareaEditors } from "./editor";
 
 (async () => {
   if (!(await Settings.isExtensionEnabled())) return;
@@ -15,8 +15,7 @@ import { injectTextareaEditors } from "./editor";
   // Highlight again after a short delay (for dynamically loaded content)
   // Some Go docs pages load content dynamically or via JS, so we re-scan
   setTimeout(highlightAll, 2000);
-  
+
   // Inject Monaco editors into any textareas marked for code
   setTimeout(injectTextareaEditors, 3000);
 })();
-
